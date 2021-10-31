@@ -2,10 +2,15 @@
 by Huake He, 11/01/2021
 
 Reading Time: About 15 minutes.
+
 COMET Paper: https://aclanthology.org/2020.emnlp-main.213.pdf
+
 COMET Github:  https://github.com/Unbabel/COMET
+
 BERTScore Paper: https://openreview.net/pdf?id=SkeHuCVFDr
+
 BERTScore Github: https://github.com/Tiiiger/bert_score
+
 ## A brief history of MT evaluation metrics
 ### Human evaluation
 In 1966, the Automatic Language Processing Advisory Committee (ALPAC) conducted a large scale evaluation study on evaluation Machine Translation (MT) systems from Russian to English. Even though the ALPAC study was infamous for concluding MT is hopless and suspending the research into related fields for two decodes, it indeed developed a practical method for evaluation of translations. Six trained translators each evaluated 144 sentences from 4 passages. The evaluation was based on "intelligibility" and "fidelity". "Intelligibility" measures to what extent the sentence can be understood, and "fidelity" measures how much information the translated sentence retained compared to the original. Human evaluation were based on the two variables, by giving a score on the scale of 1-9. This is one of the earlest practical MT evaluation metrics based on human judgement.
