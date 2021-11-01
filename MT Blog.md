@@ -141,15 +141,11 @@ As shown in table x1, for seven in eight language pair evaluation with English a
 
 ## Case Study
 In order to evaluate how well BLEU, BERTScore, and COMET can evaluate on existing MT systems, I tried to find the translated data with human judgment scores (e.g DA). Unfortunately, the MT system is not available to the public, e.g. I cannot access the Baidu-system.6940 with the highest DA score in WMT19. With this preliminary, the experiment to compare how our evaluation metrics scores with a human judgement score is unattainable. Another simpler case study for the metrics is initialized instead.
-For the setup, a group of 10 source-reference sentence pairs were prepared from a Chinese-English parallel corpus XX, as illustrated in Figure x1. The source Chinese sentences are fed to two common MT systems: Google translation and Systran translation, and the output of translation is stored in each hypothesis.txt, as shown in Figure x2. 
-
-Figure x1
-
-Figure x2
+For the setup, a group of 10 source-reference sentence pairs were prepared from a Chinese-English parallel corpus XX, as illustrated in Figure x1. The source Chinese sentences are fed to two common MT systems: Google translation and Systran translation, and the output of translation is stored in each hypothesis.txt.
 
 For BERTScore, we use the encoder from roberta without the importance weighting, and F1 score to evaluate as supported by the paper. For COMET, we use the Estimation model “wmt20-comet-qe-da”, trained based on DA and used Quality Estimation (QE) as a metric, and it is worth noting that this model is reference-free. The evaluation quality from BLEU, BERTScore, and COMET are illustrated in the table below. With limited 10 data samples, BERTScore and COMET consider Google Translator performing better, while BLEU score for Systran Translator is higher. 
 
-|BERTScore| Google | Systran |
+|System-level score| Google | Systran |
 | ------------- | ------------- | ------------- |
 |BLEU| 33.96 | 37.60 |
 |BERTScore F1| 0.793376| 0.756208 |
@@ -163,6 +159,12 @@ The limitation of BLEU as compared to BERTScore and COMET is mostly exposed in t
 |Hyp_Google| Our innovation in online search and advertising has made our website a top website in the world, and our brand has become the most recognized brand in the world.|
 |Hyp_Systran|Our innovations in online search and advertising have made our website the world's top website and made our brand the most recognized in the world.|
 
+|Segment-level score for 2nd sentence| Google | Systran |
+| ------------- | ------------- | ------------- |
+|BLEU| 19.29 | 44.96 |
+|BERTScore F1| 0.751480| 0.781972 |
+|COMET| 0.7399| 0.7396 |
+
 Let’s take a closer look at the 8th sentence shown below. Because the Systran’s translation exactly matched the reference sentence, so BLEU for this sentence is 100. However, Google’s translation “We were registered in California in September 1998 and re-registered in Delaware, USA in August 2003”, matches more with the source sentence in Chinese, especially the choice of word of “registered” instead of “incorporated”, and “Delaware, USA” instead of “Delaware”. The same lacking aspect is also shown in BERTScore, with a gap of 0.2 between the two systems. The COMET score for this sentence is 0.5144 for Google Translation versus 0.3090 for Systran Translation. We can see that the score for Systran is even lower, because COMET does not take reference sentences but the source sentences in Chinese as input. COMET aims to mimic how human judgement (DA in this case) will evaluate the translation, and clearly the Google translation provides a more exact translation as explained above. 
 | Type | Sentence |
 | ------------- | ------------- |
@@ -170,6 +172,12 @@ Let’s take a closer look at the 8th sentence shown below. Because the Systran�
 |Ref| We were incorporated in California in September 1998 and reincorporated in Delaware in August 2003.|
 |Hyp_Google| We were registered in California in September 1998 and re-registered in Delaware, USA in August 2003.|
 |Hype_Systran| We were incorporated in California in September 1998 and reincorporated in Delaware in August 2003.|
+
+|Segment-level score for 8th sentence| Google | Systran |
+| ------------- | ------------- | ------------- |
+|BLEU| 37.06 | 100 |
+|BERTScore F1| 0.794772| 1.000000 |
+|COMET| 0.5144| 0.3090 |
 
 Not a trained translator myself, I cannot give my personal judgements on Google Translator and Systran Translator, but through the two examples, we clearly see the limitation of BLEU, and the limitation of BERTScore to some extent. However, it is still debatable if reference sentences should be evaluated in the metric. For COMET, inferring human judgement directly from source is appealing, but free-of-reference may result in loss of information in certain perspectives. Considering the paper’s experiment has proven the stronger effectiveness compared to BLEU and BERTScore, COMET may have pointed another direction for future MT evaluation metrics.
 
