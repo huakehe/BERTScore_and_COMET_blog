@@ -96,7 +96,7 @@ The first step of COMET score calculation is to encode the source, MT hypothesis
 
 The word embeddings from the last layer of the encoders are fed into a pooling layer. Using a layer-wise attention mechanism, the information from the most important encoder layers are pooled into a single embedding for each token ej. μ is a trainable weight coefficient, Ej = [e(0), e(1), . . . e(k)] corresponds to the vector of layer embeddings for token xj, and α = softmax([α(1), α(2), . . . , α(k)]) is a vector corresponding to the layer-wise trainable weights.
 <p align="center">
-  <img width="100" src="img/comet_t1.png">
+  <img width="250" src="img/comet_t1.png">
 </p>
 After applying an average pooling to the resulting word embeddings, a sentence embedding can be concatenated into a single vector from segments. The process is repeated three times for source, hypothesis, and reference sequences. Two models with different usage, the Estimator model and the Translation Ranking model,  take the sentence embedding sas input.
 
@@ -130,7 +130,7 @@ In short, the Translation Ranking model is trained to minimize the distance betw
 ### Effectiveness
 To test the effectiveness of COMET, the authors trained 3 MT translations models that target different types of human judgment (DA, HTER, and MQM) from the corresponding datasets: the QT21 corpus, the WMT DARR corpus, and the MQM corpus. Two Estimator models and one Translation Ranking model are trained. One regressed on HTER (COMET-HTER) is trained with the QT21 corpus, and another model regressed on MQM (COMET-MQM) is trained with the MQM corpus. COMET-RANK is trained with the WMT DARR corpus. The evaluation method employed is the official Kendall’s Tau-like formulation: 
 <p align="center">
-  <img width="150" src="img/comet_e1.png">
+  <img width="250" src="img/comet_e1.png">
 </p>
 
 As shown in table x1, for seven in eight language pair evaluation with English as source, COMET-RANK outperforms all other evaluation systems to a significant extent, including BLERU, two encoder models of BERTScore, and its two Estimator models. Similarly, for the language pair evaluation with English as target, COMET also exceeds the other metrics in performance. 
