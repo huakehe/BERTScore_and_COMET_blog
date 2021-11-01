@@ -57,7 +57,7 @@ Optionally, we can add an importance weighting to different words to optimize th
 
 A simple example of BERTScore calculation without importance from the ref-cand cosine similarity matrix is illustrated below. Basically, R_BERT is calculated by the sum of maximum values in each row divided by the number of rows, and P_BERT is calculated by the sum of the maximum values in each column divided by the number of columns. F1 is computed by 2 times the product of R_BERT and P_BERT divided by their sum. The BERTScore with importance weighting can be computed by multiplying the corresponding weight to each cosine similarity.
 <p align="center">
-  <img src="bleu.png">
+  <img src="bleu_exm.png">
 </p>
 
 
