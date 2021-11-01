@@ -20,6 +20,16 @@ In 1966, the Automatic Language Processing Advisory Committee (ALPAC) conducted 
 
 ### Automatic evaluation
 Even though human judgement measuring metrics has evolved throught the years, purely depending on human evaluation is expensive as well as slow in face of large scale data, which promoted the need for automation. In 2002, the most commonly used evaluation metric, Bilingual Evaluation Understudy (BLEU), was developed by Kishore et al. BLEU measures the difference between human and machine translation output through n-grams and brevity penalty. Based on the “highest correlation with monolingual human judgements” found to be four, n-grams measure the exact word segment correspondence of length 1,2,3,4 in the source and target sentence pair. The brevity penalty is included to avoid short candidates receiving unreasonable high BLEU scores. BLEU remains popular till today due to its light-weightedness and fastness.
+|Reference| A SpaceX rocket was launched into a space orbit Wednesday evening.|
+|Candidate|SpaceX launched a mission Wednesday evening into a space orbit.|
+|brevity penalty|e^(1-12/11)=0.91|
+|   | Precision 
+| Unigram | 9/11 |
+| Bigram  |  4/10 | 
+| Trigram  | 2/9 | 
+| Four-gram  | 1/8 | 
+=> |BLEU =0.91*(9/11 * 4/10 * 2/9 * 1/8)^1/4 = 0.281|
+
 
 ## BERTScore
 Recent works on machine translation quality evaluation techniques have provided stronger metrics and support to the prospering machine translation realm of research. BERTScore, which appeared in the 2020 International Conference on Learning Representations, aims to develop “an automatic evaluation metric for text generation.” As a high level summary, BERTScore develops one important step forward from the commonly used BLEU, which is to incorporate the additional contextual information into consideration to calculate the degree of difference between source and target sentence. 
