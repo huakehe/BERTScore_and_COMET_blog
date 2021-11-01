@@ -73,10 +73,10 @@ Optionally, we can add an importance weighting to different words to optimize th
 
 A simple example of BERTScore calculation without importance from the ref-cand cosine similarity matrix is illustrated below. Basically, R_BERT is calculated by the sum of maximum values in each row divided by the number of rows, and P_BERT is calculated by the sum of the maximum values in each column divided by the number of columns. F1 is computed by 2 times the product of R_BERT and P_BERT divided by their sum. The BERTScore with importance weighting can be computed by multiplying the corresponding weight to each cosine similarity.
 <p align="center">
-  <img width="300" src="img/R.png">
+  <img width="500" src="img/R.png">
 </p>
 <p align="center">
-  <img width="300" src="img/P.png">
+  <img width="500" src="img/P.png">
 </p>
 <p align="center">
   <img width="300" src="img/F1.png">
@@ -88,13 +88,13 @@ For the evaluation of BERTScore, this blog will focus on the machine translation
 
 Table below demonstrates the system-level correlation to human judgements. The higher the score is, the closer the system evaluation is to human evaluation. Focusing on FBERT score (F1 score), we can see a large number of bold correlations of metrics for FBERT, indicating it is the top performance system compared to the others. 
 <p align="center">
-  <img width="600" src="img/bert_t1.png">
+  <img width="700" src="img/bert_t1.png">
 </p>
 
 
 Apart from system-level correlation, the table below illustrating the segment-level correlations, BERTScore shows a considerably higher performance compared to the others. The outperformance in segment-level correlations further exhibits the quality of BERTScore for sentence level evaluation.
 <p align="center">
-  <img width="600" src="img/bert_t4.png">
+  <img width="700" src="img/bert_t4.png">
 </p>
 
 
@@ -148,10 +148,10 @@ To test the effectiveness of COMET, the authors trained 3 MT translations models
 
 As shown in table x1, for as much as seven in eight language pair evaluation with English as source, COMET-RANK outperforms all other evaluation systems, including BLERU, two encoder models of BERTScore, and its two Estimator models, to a large extent. Similarly, for the language pair evaluation with English as target, COMET also exceeds the other metrics in performance. ???????????more?
 <p align="center">
-  <img width="600" src="img/comet_e2.png">
+  <img width="700" src="img/comet_e2.png">
 </p>
 <p align="center">
-  <img width="600" src="img/comet_e3.png">
+  <img width="700" src="img/comet_e3.png">
 </p>
 
 ## Case Study
