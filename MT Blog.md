@@ -58,13 +58,16 @@ The workflow of BERTScore calculation is illustrated in Figure x. Having a refer
 BERTScore uses the BERT model to generate contextual embeddings for each token. BERT tokenizes the input text into a sequence of word pieces, and splits the unknown words into commonly observed sequences of characters. The Transformer encoder computes the representation for each word piece by repeatedly applying self-attention and nonlinear transformation alternatively. The resulting contextual embedding from word piece will generate different vector representation for the same word piece in different contexts with regard to surrounding words, which is significantly different from the exact string match metric in BLEU. 
 
 Due to the vector representation of word embedding, BERTScore is able to perform a soft measure of similarity compared to exact-string matching in BLEU. The cosine similarity of a reference token xi and a candidate token xj prime is :
-[equation]
+<p align="center">
+  <img src="img/bert_e1.png">
+</p>
 
-With similarity measurement of each pair of reference token and candidate token in preparation, we can move on to calculating precision and recall. In the greedy match perspective, we match each token in x with the highest similarity score in x prime, and recall is computed by matching each token in x to a token in x prime, while precision is by matching each token in x prime to the corresponding token in x prime. F1 score is calculated by: . Extensive experiments indicated that F1 score performs reliably well across different settings, and therefore is the most recommended score to be used for evaluation.
-[equation]
-[possibly an example]
+With similarity measurement of each pair of reference token and candidate token in preparation, we can move on to calculating precision and recall. In the greedy match perspective, we match each token in x with the highest similarity score in x prime, and recall is computed by matching each token in x to a token in x prime, while precision is by matching each token in x prime to the corresponding token in x prime. F1 score is calculated by combining precision and recall, illustrated below. Extensive experiments indicated that F1 score performs reliably well across different settings, and therefore is the most recommended score to be used for evaluation.
+<p align="center">
+  <img src="img/bert_e2.png">
+</p>
 
-Optionally, we can add an importance weighting to different words to optimize the metric, because previous works indicated that “are words can be more indicative for sentence similarity than common words” [cite]. From experiments, apply idf-based weight can render small benefits in some scenarios, but have limited contribution in other cases, and  The authors use the inverse document frequency (idf) scores to assign higher weights to rare words. (need to expand??)
+Optionally, we can add an importance weighting to different words to optimize the metric, because previous works indicated that “are words can be more indicative for sentence similarity than common words” [cite]. From experiments, apply idf-based weight can render small benefits in some scenarios, but have limited contribution in other cases. The authors use the inverse document frequency (idf) scores to assign higher weights to rare words. Because there is limited preformance improvement when applying importance weighting, details about this optional stage will not be discussed further.
 
 ### Effectiveness
 For evaluation of BERTScore, this blog will focus on the machine translation tasks in the original paper. The experiment’s main evaluation corpus is the WMT18 metric evaluation dataset, containing predictions of 149 translation systems across 14 language pairs, gold references, and two types of human judgment scores. “Segment-level human judgments assign a score to each reference-candidate pair. System-level human judgments associate each system with a single score based on all pairs in the test set.”
@@ -144,13 +147,29 @@ Figure x1
 
 Figure x2
 
-For BERTScore, we use the encoder from roberta without the importance weighting, and F1 score to evaluate as supported by the paper. For COMET, we use the Estimation model “wmt20-comet-qe-da”, trained based on DA and used Quality Estimation (QE) as a metric, and it is worth noting that this model is reference-free. The evaluation quality from BLEU, BERTScore, and COMET are illustrated in Figure x3, x4, x5. With limited 10 data samples, BERTScore and COMET consider Google Translator performing better, while BLEU score for Systran Translator is higher. 
+For BERTScore, we use the encoder from roberta without the importance weighting, and F1 score to evaluate as supported by the paper. For COMET, we use the Estimation model “wmt20-comet-qe-da”, trained based on DA and used Quality Estimation (QE) as a metric, and it is worth noting that this model is reference-free. The evaluation quality from BLEU, BERTScore, and COMET are illustrated in the table below. With limited 10 data samples, BERTScore and COMET consider Google Translator performing better, while BLEU score for Systran Translator is higher. 
 
-Figure 3, x4, x5
+|BERTScore| Google | Systran |
+| ------------- | ------------- | ------------- |
+|BLEU| 33.96 | 37.60 |
+|BERTScore F1| 0.793376| 0.756208 |
+|COMET| 0.7215| 0.6418 |
 
-The limitation of BLEU as compared to BERTScore and COMET is mostly exposed in the second sentence -- “我们在网络搜索和广告的创新，已使我们的网站成为全世界的顶级网站，使我们的品牌成全世界最获认可的品牌”. The BLEU score for Google is 19.29, while that of Systran is 44.96. The pure measurement of n-grams based on the exact string match causes the large difference in the evaluation of the translation qualities between the two systems. In comparison, the context based BERTScore and human judgement score based COMET do not have a significant difference in their scores, and this example proves the outdatedness of BLEU to some extent.
+The limitation of BLEU as compared to BERTScore and COMET is mostly exposed in the second sentence, as illustrated in the table below. The BLEU score for Google is 19.29, while that of Systran is 44.96. The pure measurement of n-grams based on the exact string match causes the large difference in the evaluation of the translation qualities between the two systems. In comparison, the context based BERTScore and human judgement score based COMET do not have a significant difference in their scores, and this example proves the outdatedness of BLEU to some extent.
+| Type | Sentence |
+| ------------- | ------------- |
+|Src| 我们在网络搜索和广告的创新，已使我们的网站成为全世界的顶级网站，使我们的品牌成全世界最获认可的品牌。|
+|Ref| Our innovations in web search and advertising have made our web site a top internet property and our brand one of the most recognized in the world.|
+|Hyp_Google| Our innovation in online search and advertising has made our website a top website in the world, and our brand has become the most recognized brand in the world.|
+|Hyp_Systran|Our innovations in online search and advertising have made our website the world's top website and made our brand the most recognized in the world.|
 
-Let’s take a closer look at the 8th sentence-- “我们于1998年9月在加利福尼亚州注册成立 2003年8月在美国特拉华州重新注册.” Because the Systran’s translation exactly matched the reference sentence, so BLEU for this sentence is 100. However, Google’s translation “We were registered in California in September 1998 and re-registered in Delaware, USA in August 2003”, matches more with the source sentence in Chinese, especially the choice of word of “registered” instead of “incorporated”, and “Delaware, USA” instead of “Delaware”. The same lacking aspect is also shown in BERTScore, with a gap of 0.2 between the two systems. The COMET score for this sentence is 0.5144 for Google Translation versus 0.3090 for Systran Translation. We can see that the score for Systran is even lower, because COMET does not take reference sentences but the source sentences in Chinese as input. COMET aims to mimic how human judgement (DA in this case) will evaluate the translation, and clearly the Google translation provides a more exact translation as explained above. 
+Let’s take a closer look at the 8th sentence shown below. Because the Systran’s translation exactly matched the reference sentence, so BLEU for this sentence is 100. However, Google’s translation “We were registered in California in September 1998 and re-registered in Delaware, USA in August 2003”, matches more with the source sentence in Chinese, especially the choice of word of “registered” instead of “incorporated”, and “Delaware, USA” instead of “Delaware”. The same lacking aspect is also shown in BERTScore, with a gap of 0.2 between the two systems. The COMET score for this sentence is 0.5144 for Google Translation versus 0.3090 for Systran Translation. We can see that the score for Systran is even lower, because COMET does not take reference sentences but the source sentences in Chinese as input. COMET aims to mimic how human judgement (DA in this case) will evaluate the translation, and clearly the Google translation provides a more exact translation as explained above. 
+| Type | Sentence |
+| ------------- | ------------- |
+|Src|我们于1998年9月在加利福尼亚州注册成立 2003年8月在美国特拉华州重新注册。 |
+|Ref| We were incorporated in California in September 1998 and reincorporated in Delaware in August 2003.|
+|Hyp_Google| We were registered in California in September 1998 and re-registered in Delaware, USA in August 2003.|
+|Hype_Systran| We were incorporated in California in September 1998 and reincorporated in Delaware in August 2003.|
 
 Not a trained translator myself, I cannot give my personal judgements on Google Translator and Systran Translator, but through the two examples, we clearly see the limitation of BLEU, and the limitation of BERTScore to some extent. However, it is still debatable if reference sentences should be evaluated in the metric. For COMET, inferring human judgement directly from source is appealing, but free-of-reference may result in loss of information in certain perspectives. Considering the paper’s experiment has proven the stronger effectiveness compared to BLEU and BERTScore, COMET may have pointed another direction for future MT evaluation metrics.
 
