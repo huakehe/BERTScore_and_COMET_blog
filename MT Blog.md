@@ -60,7 +60,7 @@ BERTScore uses the BERT model to generate contextual embeddings for each token. 
 
 Due to the vector representation of word embedding, BERTScore is able to perform a soft measure of similarity compared to exact-string matching in BLEU. The cosine similarity of a reference token xi and a candidate token xj prime is :
 <p align="center">
-  <img src="img/bert_e1.png">
+  <img width="100" src="img/bert_e1.png">
 </p>
 
 With similarity measurement of each pair of reference token and candidate token in preparation, we can move on to calculating precision and recall. In the greedy match perspective, we match each token in x with the highest similarity score in x prime, and recall is computed by matching each token in x to a token in x prime, while precision is by matching each token in x prime to the corresponding token in x prime. F1 score is calculated by combining precision and recall, illustrated below. Extensive experiments indicated that F1 score performs reliably well across different settings, and therefore is the most recommended score to be used for evaluation.
@@ -96,28 +96,29 @@ The first step of COMET score calculation is to encode the source, MT hypothesis
 
 The word embeddings from the last layer of the encoders are fed into a pooling layer. Using a layer-wise attention mechanism, the information from the most important encoder layers are pooled into a single embedding for each token ej. μ is a trainable weight coefficient, Ej = [e(0), e(1), . . . e(k)] corresponds to the vector of layer embeddings for token xj, and α = softmax([α(1), α(2), . . . , α(k)]) is a vector corresponding to the layer-wise trainable weights.
 <p align="center">
-  <img src="img/comet_t1.png">
+  <img width="100" src="img/comet_t1.png">
 </p>
 After applying an average pooling to the resulting word embeddings, a sentence embedding can be concatenated into a single vector from segments. The process is repeated three times for source, hypothesis, and reference sequences. Two models with different usage, the Estimator model and the Translation Ranking model,  take the sentence embedding sas input.
 
 For the Estimator model, a single vector x is computed from the three sentence embeddings s, h, and r
 <p align="center">
-  <img src="img/comet_t2.png">
+  <img width="300" src="img/comet_t2.png">
 </p>
 The combined feature x serves as input to a feed-forward regression network. The network is trained to minimize the mean squared error loss between its predicted scores and human quality assessment scores (DA, HTER or MQM).
 
+
 The Translation Ranking model on the other hand, has different inputs {s,h+,h-,r}, i.e. a source,, higher-ranked hypothesis h+, a lower-ranked hypothesis h-, and reference. After transforming them into sentence embeddings bold {s,h+,h-,r}, the triplet margin loss in relation to the source and reference is calculated:
 <p align="center">
-  <img src="img/comet_t3.png">
+  <img width="300" src="img/comet_t3.png">
 </p>
 
 d(u, v) denotes the euclidean distance between u and v and ε is a margin.
 In the inference stage, the model will receive a triplet input (s,h prime,r) with only one hypothesis, and the quality score will be the harmonic mean between the distance to the source d(s,h prime) and that to the reference d(r,h prime), and normalized it to a 0 to 1 range:
 <p align="center">
-  <img src="img/comet_t4.png">
+  <img width="250" src="img/comet_t4.png">
 </p>
 <p align="center">
-  <img src="img/comet_t5.png">
+  <img width="250" src="img/comet_t5.png">
 </p>
 In short, the Translation Ranking model is trained to minimize the distance between a “better” hypothesis and both its corresponding reference and its original source. 
 <p align="center">
@@ -129,7 +130,7 @@ In short, the Translation Ranking model is trained to minimize the distance betw
 ### Effectiveness
 To test the effectiveness of COMET, the authors trained 3 MT translations models that target different types of human judgment (DA, HTER, and MQM) from the corresponding datasets: the QT21 corpus, the WMT DARR corpus, and the MQM corpus. Two Estimator models and one Translation Ranking model are trained. One regressed on HTER (COMET-HTER) is trained with the QT21 corpus, and another model regressed on MQM (COMET-MQM) is trained with the MQM corpus. COMET-RANK is trained with the WMT DARR corpus. The evaluation method employed is the official Kendall’s Tau-like formulation: 
 <p align="center">
-  <img src="img/comet_e1.png">
+  <img width="150" src="img/comet_e1.png">
 </p>
 
 As shown in table x1, for seven in eight language pair evaluation with English as source, COMET-RANK outperforms all other evaluation systems to a significant extent, including BLERU, two encoder models of BERTScore, and its two Estimator models. Similarly, for the language pair evaluation with English as target, COMET also exceeds the other metrics in performance. 
