@@ -57,7 +57,7 @@ Optionally, we can add an importance weighting to different words to optimize th
 
 A simple example of BERTScore calculation without importance from the ref-cand cosine similarity matrix is illustrated below. Basically, R_BERT is calculated by the sum of maximum values in each row divided by the number of rows, and P_BERT is calculated by the sum of the maximum values in each column divided by the number of columns. F1 is computed by 2 times the product of R_BERT and P_BERT divided by their sum. The BERTScore with importance weighting can be computed by multiplying the corresponding weight to each cosine similarity.
 <p align="center">
-  <img width="800" src="bert_exm.png">
+  <img src="bert_exm.png">
 </p>
 
 
@@ -97,7 +97,6 @@ For the Estimator model, a single vector x is computed from the three sentence e
 </p>
 Where h⊙s and h⊙r denotes the element-wise source product and reference product, and |h-s| and |h-r| denotes the absolute element-wise source difference and reference difference. The combined feature x serves as input to a feed-forward regression network. The network is trained to minimize the mean squared error loss between its predicted scores and human quality assessment scores (DA, HTER or MQM).
 
-
 The Translation Ranking model, on the other hand, has different inputs {s,h+,h-,r}, i.e. a source, a higher-ranked hypothesis h+, a lower-ranked hypothesis h-, and a reference. After transforming them into sentence embeddings **{s,h+,h-,r}**, the triplet margin loss in relation to the source and reference is calculated:
 <p align="center">
   <img width="300" src="img/comet_t3.png">
@@ -121,12 +120,12 @@ In short, the Translation Ranking model is trained to minimize the distance betw
  
 
 ### Effectiveness
-To test the effectiveness of COMET, the authors trained 3 MT translations models that target different types of human judgment (DA, HTER, and MQM) from the corresponding datasets: the QT21 corpus, the WMT DARR corpus, and the MQM corpus. Two Estimator models and one Translation Ranking model are trained. One regressed on HTER (COMET-HTER) is trained with the QT21 corpus, and another model regressed on MQM (COMET-MQM) is trained with the MQM corpus. COMET-RANK is trained with the WMT DARR corpus. The evaluation method of how  employed is the official Kendall’s Tau-like formulation: ?????????????? 
+To test the effectiveness of COMET, the authors trained 3 MT translations models that target different types of human judgment (DA, HTER, and MQM) from the corresponding datasets: the QT21 corpus, the WMT DARR corpus, and the MQM corpus. Two Estimator models and one Translation Ranking model are trained. One regressed on HTER (COMET-HTER) is trained with the QT21 corpus, and another model regressed on MQM (COMET-MQM) is trained with the MQM corpus. COMET-RANK is trained with the WMT DARR corpus. The evaluation method employed is the official Kendall’s Tau-like formulation. Concordant is the number of times the metric gives a higher score to the defined "better" hypothesis, while Discordant is the number of times the metrics give a higher score to the "worse" hypothesis or the scores is the same for the two hypothesis.
 <p align="center">
   <img width="250" src="img/comet_e1.png">
 </p>
 
-As shown in table x1, for as much as seven in eight language pair evaluation with English as source, COMET-RANK outperforms all other evaluation systems, including BLERU, two encoder models of BERTScore, and its two Estimator models, to a large extent. Similarly, for the language pair evaluation with English as target, COMET also exceeds the other metrics in performance. ???????????more?
+As shown in table the first table below, for as much as seven in eight language pair evaluation with English as source, COMET-RANK outperforms all other evaluation systems, including BLEU, two encoder models of BERTScore, and its two Estimator models, to a large extent. Similarly, for the language pair evaluation with English as target in the second table below, COMET also exceeds the other metrics in the overall performance, including the 2019 task winning metric YISI-1. 
 <p align="center">
   <img width="700" src="img/comet_e2.png">
 </p>
@@ -179,6 +178,7 @@ Let’s take a closer look at the 8th sentence shown below. Because the SYSTRAN'
 Not a trained translator myself, I cannot give my personal judgements on GNMT and SYSTRAN, but through the two examples, we clearly see the limitation of BLEU, and the limitation of BERTScore to some extent. However, it is still debatable if reference sentences should be evaluated in the metric. For COMET, inferring human judgement directly from source is appealing, but free-of-reference may result in loss of information in certain perspectives. Considering the experimental results has proven its effectiveness compared to BLEU and BERTScore, COMET may have pointed another direction for future MT evaluation metrics.
 
 ## Conclusion
+To sum up, two more advanced MT metric, BERTScore and COMET, are introduced. BERTScore enriches the information used in evaluation by incorporating contextual embedding to compute the degree of difference, and COMET employs an additional regression model to exploit information to make prediction score that correlates with human judgement. Walking through the history of MT metrics, we start from the most labor-intensive human evaluation, move a step further to automated n-gram-based metrics like BLEU, develop further on taking contextual information into consideration in BERTScore, and finally arrive at training models to evaluate like human in COMET. The development is exciting, but it is also worth noted that comparing to the recent dramatic improvement in MT quality, MT evaluation has fallen behind. In 2019, the WMT News Translation shared Task has 153 submissions, while the Metrics Shared Task only has 24 submissions [6]. The importance of MT evaluation should be the same as the MT techniques. With more advanced evaluation metrics to support and give feedbacks to new MT systems, the future development of MT realm as a whole can prosper.
 
 ## Reference
 [1] ALPAC (1966) Languages and machines: computers in translation and linguistics. A report by the Automatic Language Processing Advisory Committee, Division of Behavioral Sciences, National Academy of Sciences, National Research Council. Washington, D.C.: National Academy of Sciences, National Research Council, 1966. (Publication 1416.) 
